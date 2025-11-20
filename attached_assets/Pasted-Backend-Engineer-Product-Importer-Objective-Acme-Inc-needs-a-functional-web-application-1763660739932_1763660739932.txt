@@ -1,0 +1,63 @@
+Backend Engineer - Product Importer		
+			
+Objective	
+Acme Inc. needs a functional web application that can import products from a CSV file (approximately 500,000 records) into a SQL database. The app should be designed for scalability and optimized performance when handling large datasets.					
+Specification 
+STORY 1 — File Upload via UI
+As a user, I should be able to upload a large CSV file (up to 500,000 products) directly through the application’s user interface.
+The UI should display a clear and intuitive file upload component.
+During the upload process, the UI should show a real-time progress indicator (e.g., percentage, progress bar).
+If duplicate products exist, the system should automatically overwrite based on SKU, treating the SKU as case-insensitive.
+The SKU must remain unique across all records.
+Products may be marked as active or inactive (even though this field is not part of the CSV).
+The upload flow should be optimized for handling large files efficiently while remaining responsive.
+STORY 1A — Upload Progress Visibility
+As a user, I should be able to see the upload progress directly in the UI in real time.
+The progress should dynamically update as the file is being processed.
+The UI should display visual cues like a progress bar, percentage, or status messages (e.g., “Parsing CSV”, “Validating”, “Import Complete”).
+If the upload fails or encounters errors, the UI should clearly show the failure reason and provide a retry option.
+The technical implementation may rely on APIs (e.g., SSE, WebSockets, or polling), but the focus is on providing a smooth, interactive visual experience.
+STORY 2 — Product Management UI
+As a user, I should be able to view, create, update, and delete products entirely from a web interface.
+The interface should support:
+Filtering by SKU, name, active status, or description.
+Paginated viewing of product lists with clear navigation controls.
+Inline editing or a simple modal form for creating/updating products.
+Deletion with a confirmation step.
+Minimalist, clean design — even a simple HTML/JS frontend is sufficient as long as it demonstrates all functional capabilities.
+STORY 3 — Bulk Delete from UI
+As a user, I should be able to delete all existing products directly from the UI.
+This operation must be protected with a confirmation dialog (e.g., “Are you sure? This cannot be undone.”).
+The UI should display success/failure notifications after the operation.
+This feature should be responsive and provide visual feedback during processing.
+STORY 4 — Webhook Configuration via UI
+As a user, I should be able to configure and manage multiple webhooks through the application’s user interface.
+The UI should allow adding, editing, testing, and deleting webhooks.
+It should display webhook URLs, event types, and enable/disable status.
+There should be visual confirmation of successful test triggers (e.g., response code, response time).
+The webhook processing should remain performant and not degrade overall application responsiveness.	
+Toolkit
+Acme Inc. is also opinionated about their tech stack. The tools should be:
+Web framework: Python based frameworks (Flask, Tornado, Django, FastAPI)
+Asynchronous execution: Celery/Dramatiq with RabbitMQ/Redis
+ORM: SQLAlchemy (if not django).
+Database: We recommend PostgreSQL (and works with the deployment choice below).
+Deployment: The application should be hosted on a publicly accessible platform of your choice (e.g., Heroku, Render, AWS, GCP, etc.). You can use any free-tier or easily deployable option that allows reviewers to access and test the app.
+Next Steps						
+Build the app
+Push the code to Github/Bitbucket/Gitlab
+Deploy the app
+Note: Feel free to use any AI tools of your choice and share the output of all prompts in any file format or link.		
+Submission Guidelines: Please reply to the same email thread within 24 hours.	
+
+
+Points and Rating scheme			
+APPROACH AND CODE QUALITY
+Code quality is a very important part of the assignment. Better documented, standards compliant code that is readable wins over brilliant hacks. Remember CPU and Memory are cheap and expendable, humans are not. 				
+COMMIT HISTORY
+Clean commits and a good commit history offers a sneak peak into planning and execution.
+DEPLOYMENT
+Gone are the days when deployment was handled by a separate team. Modern engineers are expected to manage infrastructure as code and take ownership of deploying their applications. Hosting your app on any public platform (such as Heroku, Render, AWS, or GCP) is a great way to showcase how your solution performs in a real-world environment.
+TIMEOUT FOR LONG OPERATIONS
+For example, platforms like Heroku have a 30-second timeout limit. The product upload process is expected to exceed this limit, so your solution should handle long-running operations using asynchronous workers or other suitable approaches. Your implementation should address this elegantly. Feel free to ask if you’d like ideas or suggestions.
+
