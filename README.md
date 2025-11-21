@@ -7,9 +7,6 @@
 
 A scalable web application for importing and managing products from CSV files (up to 500,000 records) with real-time progress tracking, built with FastAPI, Celery, and PostgreSQL.
 
-## 🌐 Live Demo
-
-**Public URL**: [Coming Soon - Will be deployed on Render.com]
 
 ## ✨ Features
 

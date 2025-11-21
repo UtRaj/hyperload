@@ -14,7 +14,7 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 # Initialize database
-echo "Initializing database..."
+echo "DATABASE_URL: $DATABASE_URL"
 python -c "from app.database import init_db; init_db()" || echo "Database initialization skipped or failed"
 
 echo "Starting application..."
