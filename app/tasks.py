@@ -10,8 +10,26 @@ import redis
 import os
 import httpx
 import logging
+import uuid
+from typing import List, Dict
+from sqlalchemy.orm import Session
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+# Get Redis URL with proper fallback
+REDIS_URL = os.getenv("REDIS_URL")
+
+# Handle Railway's different Redis variable names
+if not REDIS_URL or not REDIS_URL.startswith(("redis://", "rediss://")):
+    REDIS_URL = os.getenv("REDISURL")  # Railway alternative
+    
+if not REDIS_URL or not REDIS_URL.startswith(("redis://", "rediss://")):
+    REDIS_URL = os.getenv("REDIS_PRIVATE_URL")  # Railway private network
+    
+if not REDIS_URL or not REDIS_URL.startswith(("redis://", "rediss://")):
+    # Fallback for local development
+    REDIS_URL = "redis://localhost:6379/0"
+    print(f"WARNING: Using fallback Redis URL: {REDIS_URL}")
+
+print(f"Redis URL configured: {REDIS_URL[:20]}...")  # Print first 20 chars for debugging
 redis_client = redis.from_url(REDIS_URL)
 
 CHUNK_SIZE = 1000
