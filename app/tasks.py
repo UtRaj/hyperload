@@ -42,7 +42,7 @@ def import_csv_task(self, file_path: str, file_size: int = 0):
         with open(file_path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             
-            if 'sku' not in reader.fieldnames or 'name' not in reader.fieldnames:
+            if not reader.fieldnames or 'sku' not in reader.fieldnames or 'name' not in reader.fieldnames:
                 raise ValueError("CSV must contain 'sku' and 'name' columns")
             
             for row in reader:
@@ -78,14 +78,13 @@ def import_csv_task(self, file_path: str, file_size: int = 0):
                 rows_processed += 1
                 sku_lower = sku.lower()
                 
-                if sku_lower not in all_seen_skus:
-                    all_seen_skus.add(sku_lower)
-                    current_batch[sku_lower] = {
-                        'sku': sku,
-                        'name': name,
-                        'description': description if description else None,
-                        'active': True
-                    }
+                all_seen_skus.add(sku_lower)
+                current_batch[sku_lower] = {
+                    'sku': sku,
+                    'name': name,
+                    'description': description if description else None,
+                    'active': True
+                }
                 
                 current_time = time.time()
                 should_publish = (

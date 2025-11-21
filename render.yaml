@@ -1,0 +1,53 @@
+services:
+  # Web Service (FastAPI)
+  - type: web
+    name: product-importer-web
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: product-importer-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: product-importer-redis
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: product-importer-db
+          property: host
+      - key: DB_PORT
+        value: 5432
+    healthCheckPath: /
+    
+  # Worker Service (Celery)
+  - type: worker
+    name: product-importer-worker
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: celery -A app.celery_app worker --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: product-importer-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: product-importer-redis
+          property: connectionString
+
+  # Redis Service
+  - type: redis
+    name: product-importer-redis
+    ipAllowList: []
+
+# Database
+databases:
+  - name: product-importer-db
+    databaseName: product_importer
+    user: product_user

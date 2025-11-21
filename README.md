@@ -1,8 +1,19 @@
-# Product Importer - Acme Inc
+# Product Importer - Acme Inc.
 
-A high-performance web application for importing and managing products from CSV files, built for scalability and designed to handle large datasets (up to 500,000+ records).
+[![Tests](https://img.shields.io/badge/tests-20%2F20%20passing-brightgreen)](tests/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688.svg)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)](https://www.docker.com/)
 
-## Features
+A scalable web application for importing and managing products from CSV files (up to 500,000 records) with real-time progress tracking, built with FastAPI, Celery, and PostgreSQL.
+
+## 🌐 Live Demo
+
+**Public URL**: [Coming Soon - Will be deployed on Render.com]
+
+## ✨ Features
+
+### User Stories Implemented
 
 ### Story 1: CSV File Upload with Real-time Progress
 - Upload large CSV files (up to 500,000 products) through an intuitive drag-and-drop interface
@@ -54,11 +65,19 @@ A high-performance web application for importing and managing products from CSV 
 ## Installation & Setup
 
 ### Prerequisites
-- Python 3.11+
-- PostgreSQL
-- Redis
+- Docker and Docker Compose
+- OR Python 3.11+, PostgreSQL, and Redis
 
-### Local Development
+### Quick Start (Docker)
+1.  **Run the application:**
+    ```bash
+    docker-compose up --build
+    ```
+2.  **Access:**
+    - Web UI: http://localhost:5000
+    - API Docs: http://localhost:5000/docs
+
+### Local Development (Manual)
 
 1. **Install Dependencies:**
    ```bash
