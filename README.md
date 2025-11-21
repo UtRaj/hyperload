@@ -135,7 +135,7 @@ A scalable web application for importing and managing products from CSV files (u
 ├── templates/
 │   └── index.html           # Main UI template
 ├── requirements.txt         # Python dependencies
-├── start_all.sh            # Combined startup script
+├── entrypoint.sh            # Combined startup script
 ├── sample_products.csv     # Sample CSV for testing
 └── README.md               # This file
 ```
@@ -147,9 +147,7 @@ A scalable web application for importing and managing products from CSV files (u
 - `sku`: String (Unique, Case-Insensitive Index)
 - `name`: String (Required)
 - `description`: Text (Optional)
-- `active`: Boolean (Default: True)
-- `created_at`: DateTime
-- `updated_at`: DateTime
+
 
 ### Webhooks Table
 - `id`: Integer (Primary Key)
@@ -233,11 +231,6 @@ The application is designed to be deployed on any platform that supports:
 - Redis instances
 - Worker processes (Celery)
 
-### Recommended Platforms
-- **Render.com**: Free tier supports all requirements
-- **Railway.app**: Easy deployment with PostgreSQL and Redis
-- **Heroku**: Classic PaaS with worker dynos
-- **AWS/GCP**: Full control with EC2/Compute Engine
 
 ### Deployment Configuration
 
@@ -247,92 +240,6 @@ DATABASE_URL=postgresql://...
 REDIS_URL=redis://...
 ```
 
-### Railway Deployment (Recommended)
-
-Railway provides an excellent platform for deploying this application with built-in PostgreSQL and Redis support.
-
-#### Prerequisites
-- Railway account (free tier available)
-- GitHub repository (optional but recommended)
-
-#### Deployment Steps
-
-1. **Create a New Project on Railway**
-   - Go to [Railway.app](https://railway.app)
-   - Click "New Project"
-   - Choose "Deploy from GitHub repo" or "Empty Project"
-
-2. **Add PostgreSQL Database**
-   - Click "New" → "Database" → "Add PostgreSQL"
-   - Railway automatically creates a Postgres instance
-   - Note: Database URL is automatically available as `DATABASE_URL`
-
-3. **Add Redis**
-   - Click "New" → "Database" → "Add Redis"
-   - Railway automatically creates a Redis instance
-   - Note: Redis URL is automatically available as `REDIS_URL`
-
-4. **Deploy Web Service**
-   - Click "New" → "GitHub Repo" (or "Empty Service")
-   - Select your repository
-   - Railway will auto-detect the Dockerfile
-   - **Configure the service:**
-     - **Service Name**: `product-importer-web`
-     - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-     - **Environment Variables** (auto-linked from Postgres/Redis):
-       - `DATABASE_URL` - Reference from PostgreSQL service
-       - `REDIS_URL` - Reference from Redis service
-     - **Port**: Railway auto-assigns (use `$PORT` in command)
-     - **Public Domain**: Enable to get a public URL
-
-5. **Deploy Worker Service**
-   - Click "New" → "GitHub Repo" (same repository)
-   - **Configure the service:**
-     - **Service Name**: `product-importer-worker`
-     - **Start Command**: `celery -A app.celery_app worker --loglevel=info --concurrency=4 --max-memory-per-child=200000`
-     - **Environment Variables** (auto-linked from Postgres/Redis):
-       - `DATABASE_URL` - Reference from PostgreSQL service
-       - `REDIS_URL` - Reference from Redis service
-     - **Note**: This is a worker service, no public domain needed
-
-6. **Verify Deployment**
-   - Check logs for both services
-   - Web service should show: `Application startup complete`
-   - Worker service should show: `celery@... ready`
-   - Visit your public domain URL
-
-#### Railway Configuration File
-
-A `railway.json` file is included in the project root for the worker service configuration.
-
-#### Troubleshooting Railway Deployment
-
-**Issue: Worker crashes with "DATABASE_URL not set"**
-- Solution: Ensure environment variables are properly linked from PostgreSQL service
-- Go to Worker service → Variables → Add Reference → Select PostgreSQL → DATABASE_URL
-
-**Issue: "Running as root" warning**
-- Solution: This is now fixed in the Dockerfile (runs as `celery` user)
-- Redeploy to apply changes
-
-**Issue: Worker uses too much memory**
-- Solution: Adjust `--max-memory-per-child` in the start command
-- Default is 200MB (200000 KB), increase if needed
-
-**Issue: Redis connection failed**
-- Solution: Ensure REDIS_URL is properly linked from Redis service
-- Check that Redis service is running in the same project
-
-
-
-### Handling Platform Timeouts
-
-Platforms like Heroku have 30-second request timeouts. This application handles this elegantly:
-
-1. **File Upload**: Immediately returns with a task ID (< 1 second)
-2. **Background Processing**: Celery worker processes the CSV asynchronously
-3. **Progress Updates**: SSE stream provides real-time updates without maintaining HTTP connection
-4. **Result Retrieval**: Progress persisted in Redis for later queries
 
 ## Testing
 
@@ -375,10 +282,4 @@ The codebase follows Python best practices:
 - API rate limiting
 - Metrics and monitoring dashboard
 
-## License
 
-Proprietary - Acme Inc.
-
-## Support
-
-For issues or questions, please contact the development team.
