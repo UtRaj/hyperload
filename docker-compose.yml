@@ -19,7 +19,7 @@ services:
 
   worker:
     build: .
-    command: celery -A app.celery_app worker --loglevel=info --concurrency=2
+    command: celery -A app.celery_app worker --loglevel=info --concurrency=1 --max-memory-per-child=200000
     volumes:
       - .:/app
     environment:
