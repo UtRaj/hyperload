@@ -40,6 +40,12 @@ services:
           type: redis
           name: product-importer-redis
           property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: product-importer-db
+          property: host
+      - key: DB_PORT
+        value: 5432
 
   # Redis Service
   - type: redis
