@@ -33,5 +33,12 @@ COPY . .
 COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 
+# Create a non-root user for running the application
+RUN groupadd -r celery && useradd -r -g celery celery \
+    && chown -R celery:celery /app
+
+# Switch to non-root user
+USER celery
+
 # Run entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -29,7 +29,7 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    dockerCommand: celery -A app.celery_app worker --loglevel=info
+    dockerCommand: celery -A app.celery_app worker --loglevel=info --concurrency=4 --max-memory-per-child=200000
     envVars:
       - key: DATABASE_URL
         fromDatabase:
